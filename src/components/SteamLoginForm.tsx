@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -12,6 +12,41 @@ const SteamLoginForm = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [qrCode, setQrCode] = useState('/lovable-uploads/dd61aa68-1534-4089-b154-6d063758d1a1.png');
+  const [qrExpiry, setQrExpiry] = useState(300); // 5 dakika başlangıç
+  const [qrExpiryFormatted, setQrExpiryFormatted] = useState('5:00');
+
+  useEffect(() => {
+    // QR kodu için timer
+    const timer = setInterval(() => {
+      setQrExpiry((prev) => {
+        if (prev <= 0) {
+          // QR kodunu yenile
+          clearInterval(timer);
+          return 300; // Sıfırlandığında tekrar 5 dakika başlat
+        }
+        
+        // Süreyi formatla (dakika:saniye)
+        const minutes = Math.floor((prev - 1) / 60);
+        const seconds = (prev - 1) % 60;
+        setQrExpiryFormatted(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        
+        return prev - 1;
+      });
+    }, 1000);
+
+    // 5 dakika (300 saniye) sonra QR kodunu değiştirme simülasyonu
+    const qrChangeTimer = setInterval(() => {
+      // Gerçek bir sistemde burada backend'den yeni bir QR kodu alınırdı
+      setQrExpiry(300); // Süreyi sıfırla
+      setQrExpiryFormatted('5:00');
+    }, 300 * 1000);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(qrChangeTimer);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,12 +132,15 @@ const SteamLoginForm = () => {
           <h2 className="text-xs font-medium text-blue-400 uppercase">VEYA QR KODU İLE GİRİŞ YAPIN</h2>
         </div>
         <div className="flex flex-col items-center">
-          <div className="bg-white p-3 w-48 h-48 mx-auto mb-3">
+          <div className="bg-white p-3 w-48 h-48 mx-auto mb-3 relative">
             <img 
               src="/lovable-uploads/dd61aa68-1534-4089-b154-6d063758d1a1.png" 
               alt="QR Code" 
               className="w-full h-full"
             />
+            <div className="absolute bottom-2 right-2 text-xs font-mono bg-black/10 px-1.5 py-0.5 rounded">
+              {qrExpiryFormatted}
+            </div>
           </div>
           <p className="text-center text-xs text-white/70">
             QR kodunu giriş yapmak için <br/>
