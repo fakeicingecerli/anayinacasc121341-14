@@ -4,31 +4,25 @@ import SteamLoginForm from '../components/SteamLoginForm';
 import SteamBackground from '../components/SteamBackground';
 import SteamHeader from '../components/SteamHeader';
 import ValveFooter from '../components/ValveFooter';
+import { Separator } from '@/components/ui/separator';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
+    <div className="min-h-screen flex flex-col relative bg-steam-darkBlue text-white">
       <SteamBackground />
       
       <SteamHeader />
       
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md space-y-8">
-          <SteamLoginForm />
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-4xl space-y-8">
+          {/* Title */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-medium text-white mb-2">Giriş</h1>
+          </div>
           
-          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-md shadow-lg animate-fade-in">
-            <div className="space-y-3 text-center">
-              <h2 className="text-lg font-medium text-white">New to Steam?</h2>
-              <p className="text-sm text-white/80">
-                It's free and easy to use. Discover thousands of games to play with millions of new friends.
-              </p>
-              <button className="mt-2 w-full py-3 px-4 rounded bg-steam-lightBlue hover:bg-steam-lightBlue/90 text-white shadow-md transition-all duration-300 animate-hover-rise">
-                Create a New Account
-              </button>
-              <a href="#" className="block mt-4 text-sm text-steam-lightBlue hover:text-white transition-colors">
-                Learn more about Steam
-              </a>
-            </div>
+          {/* Login Form */}
+          <div className="bg-[#171a21]/70 backdrop-blur-sm p-6 rounded-md shadow-lg animate-fade-in">
+            <SteamLoginForm />
           </div>
         </div>
       </main>

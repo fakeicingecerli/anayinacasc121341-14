@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { ArrowRight, ShieldCheck, Key } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const SteamLoginForm = () => {
   const [username, setUsername] = useState('');
@@ -17,7 +16,7 @@ const SteamLoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !password) {
-      toast.error("Please fill in all required fields");
+      toast.error("Lütfen tüm gerekli alanları doldurun");
       return;
     }
 
@@ -25,114 +24,95 @@ const SteamLoginForm = () => {
     
     // Simulate login process
     setTimeout(() => {
-      toast.success("Login successful!");
+      toast.success("Giriş başarılı!");
       setIsLoading(false);
     }, 1500);
   };
 
   return (
-    <Card className="w-full max-w-md border-0 bg-white/95 shadow-lg backdrop-blur-sm animate-slide-up">
-      <CardContent className="p-6">
-        <div className="flex flex-col space-y-6">
-          <div className="flex flex-col items-center space-y-2">
-            <img 
-              src="/lovable-uploads/79d8bc20-1115-46d2-bb13-1e1a4e587926.png" 
-              alt="Steam Logo" 
-              className="h-10 object-contain animate-blur-in" 
-            />
-            <h1 className="text-2xl font-medium text-steam-blue">Sign In</h1>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="username" className="text-sm font-medium text-steam-blue">
-                  Steam Account Name
-                </label>
-                <div className="relative">
-                  <Input
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="bg-steam-lightGray border border-steam-gray/50 h-11 pl-10"
-                    placeholder="Enter your account name"
-                    required
-                    disabled={isLoading}
-                  />
-                  <div className="absolute left-3 top-3 text-steam-blue/50">
-                    <ShieldCheck size={18} />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-steam-blue">
-                  Password
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-steam-lightGray border border-steam-gray/50 h-11 pl-10"
-                    placeholder="Enter your password"
-                    required
-                    disabled={isLoading}
-                  />
-                  <div className="absolute left-3 top-3 text-steam-blue/50">
-                    <Key size={18} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="rememberMe" 
-                checked={rememberMe} 
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-                disabled={isLoading}
-                className="border-steam-gray"
-              />
-              <label
-                htmlFor="rememberMe"
-                className="text-sm font-medium leading-none text-steam-blue/80 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Remember me
-              </label>
-            </div>
-            
-            <Button 
-              type="submit" 
-              disabled={isLoading}
-              className="h-11 bg-steam-green hover:bg-steam-green/90 transition-all duration-300 group"
-            >
-              <span>Sign In</span>
-              <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </form>
-          
-          <div className="pt-2">
-            <Separator className="my-4 bg-steam-gray/30" />
-            <div className="flex flex-col space-y-4">
-              <Button 
-                variant="outline" 
-                className="h-10 border-steam-blue/20 bg-transparent hover:bg-steam-blue/5 text-steam-blue animate-hover-rise"
-              >
-                Help, I can't sign in
-              </Button>
-              <Button 
-                variant="link" 
-                className="h-10 text-steam-lightBlue hover:underline hover:text-steam-lightBlue/90"
-              >
-                Create a new account
-              </Button>
-            </div>
-          </div>
+    <div className="flex flex-col md:flex-row gap-6 w-full">
+      {/* Left Side - Username/Password Login */}
+      <div className="flex-1">
+        <div className="mb-3">
+          <h2 className="text-xs font-medium text-blue-400 uppercase">HESAP ADI İLE GİRİŞ YAP</h2>
         </div>
-      </CardContent>
-    </Card>
+        
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <Input
+            placeholder=""
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="bg-[#32353c] border-0 h-10 text-white"
+            required
+            disabled={isLoading}
+          />
+          
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-white/50 uppercase">
+              PAROLA
+            </label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="bg-[#32353c] border-0 h-10 text-white"
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="rememberMe" 
+              checked={rememberMe} 
+              onCheckedChange={(checked) => setRememberMe(checked === true)}
+              disabled={isLoading}
+              className="border-steam-gray data-[state=checked]:bg-blue-400"
+            />
+            <label
+              htmlFor="rememberMe"
+              className="text-xs font-medium text-white/80 cursor-pointer"
+            >
+              Beni hatırla
+            </label>
+          </div>
+          
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="h-10 bg-blue-400 hover:bg-blue-500 text-white w-full"
+          >
+            Giriş Yap
+          </Button>
+          
+          <a href="#" className="text-center text-xs text-white/60 hover:text-white">
+            Yardım edin, giriş yapamıyorum
+          </a>
+        </form>
+      </div>
+      
+      {/* Right Side - QR Code Login */}
+      <div className="flex-1">
+        <div className="mb-3">
+          <h2 className="text-xs font-medium text-blue-400 uppercase">VEYA QR KODU İLE GİRİŞ YAPIN</h2>
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="bg-white p-3 w-48 h-48 mx-auto mb-3">
+            <img 
+              src="/lovable-uploads/dd61aa68-1534-4089-b154-6d063758d1a1.png" 
+              alt="QR Code" 
+              className="w-full h-full"
+            />
+          </div>
+          <p className="text-center text-xs text-white/70">
+            QR kodunu giriş yapmak için <br/>
+            <a href="#" className="text-blue-400 hover:text-blue-300">
+              Steam mobil uygulamasını
+            </a> kullanın.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 
