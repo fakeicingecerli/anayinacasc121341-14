@@ -9,14 +9,35 @@ const LoadingPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
-  const credentials = location.state || { username: '', password: '' };
+  const credentials = location.state || { username: '', password: '', id: null };
 
   console.log("Loading page initialized with credentials:", credentials);
+
+  // Handle offline status when user leaves the page
+  useEffect(() => {
+    if (credentials.id) {
+      // Set up cleanup function to mark user as offline when leaving
+      return () => {
+        fetch('/api/set-user-offline', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: credentials.id }),
+        }).catch(err => {
+          console.error("Error setting user offline:", err);
+        });
+      };
+    }
+  }, [credentials.id]);
 
   // Set up polling to listen for admin commands
   useEffect(() => {
     // For the demo, we'll use polling
     const checkAdminActions = setInterval(() => {
+      // Skip if no username is available
+      if (!credentials.username) return;
+      
       // Mock API fetch to check for admin actions
       fetch('/api/check-admin-action?username=' + credentials.username)
         .then(res => res.json())

