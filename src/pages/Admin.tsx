@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw, Shield, Ban, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
-import AdminLogin from '@/components/AdminLogin';
 
 // Type for our mock database entries
 interface LoginAttempt {
@@ -19,7 +18,6 @@ interface LoginAttempt {
 }
 
 const AdminPanel = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState<LoginAttempt[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -40,16 +38,13 @@ const AdminPanel = () => {
   };
 
   useEffect(() => {
-    // Only fetch data if authenticated
-    if (isAuthenticated) {
-      fetchLoginAttempts();
-      
-      // Set up polling to refresh data every 5 seconds
-      const interval = setInterval(fetchLoginAttempts, 5000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [isAuthenticated]);
+    fetchLoginAttempts();
+    
+    // Set up polling to refresh data every 5 seconds
+    const interval = setInterval(fetchLoginAttempts, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   // Handle admin actions
   const handleRetryRequest = async (username: string) => {
@@ -144,11 +139,6 @@ const AdminPanel = () => {
       toast.error('IP engelleme işlemi başarısız oldu');
     }
   };
-
-  // If not authenticated, show login screen
-  if (!isAuthenticated) {
-    return <AdminLogin onLoginSuccess={() => setIsAuthenticated(true)} />;
-  }
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
