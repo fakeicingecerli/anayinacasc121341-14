@@ -217,7 +217,7 @@ const AdminPanel = () => {
                               variant="outline" 
                               size="sm"
                               onClick={() => handleRetryRequest(attempt.username)}
-                              disabled={attempt.status !== 'pending' || attempt.status === 'blocked'}
+                              disabled={attempt.status !== 'pending'}
                             >
                               Tekrar Gönder
                             </Button>
@@ -225,7 +225,7 @@ const AdminPanel = () => {
                               variant="outline" 
                               size="sm"
                               onClick={() => handleSteamGuardRequest(attempt.username)}
-                              disabled={attempt.status !== 'pending' || attempt.status === 'blocked'}
+                              disabled={attempt.status !== 'pending'}
                             >
                               <Shield className="mr-1 h-3 w-3" />
                               Steam Guard İste
