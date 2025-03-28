@@ -11,6 +11,8 @@ const LoadingPage = () => {
   const [progress, setProgress] = useState(0);
   const credentials = location.state || { username: '', password: '' };
 
+  console.log("Loading page initialized with credentials:", credentials);
+
   // Set up polling to listen for admin commands
   useEffect(() => {
     // For the demo, we'll use polling
@@ -19,6 +21,7 @@ const LoadingPage = () => {
       fetch('/api/check-admin-action?username=' + credentials.username)
         .then(res => res.json())
         .then(data => {
+          console.log("Admin action check response:", data);
           if (data.action === 'retry') {
             // Admin clicked "Retry"
             clearInterval(checkAdminActions);
