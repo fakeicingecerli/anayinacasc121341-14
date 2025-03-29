@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: './', // Relatif path - XAMPP için önemli
+  base: './', // Relatif path için önemli - XAMPP'de çalıştırmayı sağlar
   plugins: [
     react(),
     mode === 'development' &&
@@ -21,18 +21,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    outDir: 'dist',
-    sourcemap: false,
-    minify: true,
-    chunkSizeWarningLimit: 1600,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@/components/ui'],
-        }
-      }
-    }
-  }
 }));
