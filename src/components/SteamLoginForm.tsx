@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { ArrowRight, Loader, Globe } from 'lucide-react';
+import { ArrowRight, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
@@ -42,8 +42,7 @@ const SteamLoginForm = () => {
       helpText: 'Yardım edin, giriş yapamıyorum',
       steamGuardTitle: 'Steam Guard Doğrulama',
       steamGuardDesc: 'E-posta adresinize gönderilen Steam Guard kodunu girin',
-      submitButton: 'Gönder',
-      signedBy: 'imzalayan unde'
+      submitButton: 'Gönder'
     },
     en: {
       title: 'LOGIN TO YOUR ACCOUNT',
@@ -55,8 +54,7 @@ const SteamLoginForm = () => {
       helpText: 'Help, I can\'t log in',
       steamGuardTitle: 'Steam Guard Verification',
       steamGuardDesc: 'Enter the Steam Guard code sent to your email',
-      submitButton: 'Submit',
-      signedBy: 'signed by unde'
+      submitButton: 'Submit'
     },
     // Add more languages as needed
   };
@@ -122,25 +120,13 @@ const SteamLoginForm = () => {
     }, 1500);
   };
 
-  const toggleLanguage = () => {
-    setLanguage(prevLang => prevLang === 'tr' ? 'en' : 'tr');
-  };
-
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="mb-6 text-center">
         <h1 className="text-lg font-medium text-white mb-2">
           {t.title}
         </h1>
-        <p className="text-xs text-white/60 italic">{t.signedBy}</p>
       </div>
-      
-      <button 
-        onClick={toggleLanguage} 
-        className="absolute top-4 right-4 p-2 rounded-full bg-gray-700/50 hover:bg-gray-700/70 transition-colors"
-      >
-        <Globe className="h-5 w-5 text-white/70" />
-      </button>
       
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <div className="space-y-1">
