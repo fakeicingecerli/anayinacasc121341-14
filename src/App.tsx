@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { useEffect, lazy, Suspense } from "react";
 import Loading from "./pages/Loading";
 import NotFound from "./pages/NotFound";
@@ -27,17 +27,7 @@ const App = () => {
   // Initialize the mock API service
   useEffect(() => {
     initMockApi();
-    
-    // 404 hatalarını izleme
-    const handleRouteChange = () => {
-      const path = window.location.pathname;
-      if (!["/", "/loading", "/steam-guard", "/admin"].includes(path)) {
-        console.log(`Potential 404: ${path}`);
-      }
-    };
-    
-    window.addEventListener("popstate", handleRouteChange);
-    return () => window.removeEventListener("popstate", handleRouteChange);
+    console.log("App initialized successfully");
   }, []);
 
   return (
@@ -45,19 +35,17 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename="/">
+        <HashRouter>
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/loading" element={<Loading />} />
               <Route path="/steam-guard" element={<SteamGuard />} />
               <Route path="/admin" element={<AdminPanel />} />
-              {/* Redirect incorrect routes to 404 page */}
-              <Route path="/404" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
-        </BrowserRouter>
+        </HashRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
