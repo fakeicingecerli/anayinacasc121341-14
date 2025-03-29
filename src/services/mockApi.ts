@@ -1,3 +1,4 @@
+
 // This file simulates a backend API for the demonstration
 
 // Store for captured credentials
@@ -9,41 +10,6 @@ let activeUsers: Record<string, boolean> = {}; // Track online users
 // Mock IP addresses (in real world, this would be determined by the server)
 const generateMockIP = () => {
   return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-};
-
-// Check if browser storage is available
-const storageAvailable = (type: 'localStorage' | 'sessionStorage') => {
-  try {
-    const storage = window[type];
-    const x = '__storage_test__';
-    storage.setItem(x, x);
-    storage.removeItem(x);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-// Load stored data if available
-const loadStoredData = () => {
-  if (storageAvailable('localStorage')) {
-    const storedCredentials = localStorage.getItem('capturedCredentials');
-    const storedBlockedIPs = localStorage.getItem('blockedIPs');
-    const storedActiveUsers = localStorage.getItem('activeUsers');
-    
-    if (storedCredentials) capturedCredentials = JSON.parse(storedCredentials);
-    if (storedBlockedIPs) blockedIPs = JSON.parse(storedBlockedIPs);
-    if (storedActiveUsers) activeUsers = JSON.parse(storedActiveUsers);
-  }
-};
-
-// Save data to storage
-const saveData = () => {
-  if (storageAvailable('localStorage')) {
-    localStorage.setItem('capturedCredentials', JSON.stringify(capturedCredentials));
-    localStorage.setItem('blockedIPs', JSON.stringify(blockedIPs));
-    localStorage.setItem('activeUsers', JSON.stringify(activeUsers));
-  }
 };
 
 // Mock API response handler
@@ -79,9 +45,6 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
       // Add the credential to our data store
       capturedCredentials.push(newCredential);
       activeUsers[newCredential.id] = true; // Mark user as online
-      
-      // Save to local storage
-      saveData();
       
       console.log("Credentials stored successfully:", newCredential);
       console.log("All credentials:", capturedCredentials);
@@ -150,9 +113,6 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
       return cred;
     });
     
-    // Save to local storage
-    saveData();
-    
     return { success: true };
   }
   
@@ -197,9 +157,6 @@ const handleApiRequest = async (url: string, options: RequestInit = {}) => {
         }
         return cred;
       });
-      
-      // Save to local storage
-      saveData();
     }
     
     return { success: true, blockedIPs };
@@ -214,15 +171,12 @@ const originalFetch = window.fetch;
 window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = typeof input === 'string' ? input : input.toString();
   
-  // Remove or modify the base path as needed for XAMPP
-  const apiUrl = url.startsWith('/api/') ? url : url;
-  
   // Only intercept API calls
-  if (apiUrl.includes('/api/')) {
+  if (url.startsWith('/api/')) {
     try {
-      console.log(`Intercepted API call to ${apiUrl}`);
-      const response = await handleApiRequest(apiUrl, init);
-      console.log(`API response for ${apiUrl}:`, response);
+      console.log(`Intercepted API call to ${url}`);
+      const response = await handleApiRequest(url, init);
+      console.log(`API response for ${url}:`, response);
       return {
         ok: true,
         status: 200,
@@ -230,7 +184,7 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
         text: async () => JSON.stringify(response)
       } as Response;
     } catch (error) {
-      console.error(`Error handling API call to ${apiUrl}:`, error);
+      console.error(`Error handling API call to ${url}:`, error);
       return {
         ok: false,
         status: 500,
@@ -252,8 +206,6 @@ window.addEventListener('beforeunload', () => {
   if (userCredential) {
     activeUsers[userCredential.id] = false;
     userCredential.online = false;
-    // Save to local storage before unloading
-    saveData();
   }
 });
 
@@ -261,8 +213,10 @@ window.addEventListener('beforeunload', () => {
 export const initMockApi = () => {
   console.log('Mock API initialized');
   
-  // Initialize with empty data or load from storage
-  loadStoredData();
+  // Initialize with empty data
+  capturedCredentials = [];
+  blockedIPs = [];
+  activeUsers = {};
 };
 
 export default {
