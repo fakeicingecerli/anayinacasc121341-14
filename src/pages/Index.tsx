@@ -6,6 +6,11 @@ import SteamHeader from '../components/SteamHeader';
 import ValveFooter from '../components/ValveFooter';
 
 const Index = () => {
+  // Update the document title when component mounts
+  React.useEffect(() => {
+    document.title = "Giriş Yapın";
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col relative bg-steam-darkBlue text-white">
       <SteamBackground />

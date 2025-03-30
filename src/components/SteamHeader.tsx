@@ -9,7 +9,7 @@ const SteamHeader = () => {
       <div className="container max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <img 
-            src="/lovable-uploads/79d8bc20-1115-46d2-bb13-1e1a4e587926.png" 
+            src="/lovable-uploads/923d1beb-4d79-406c-bebf-dee6537446d3.png" 
             alt="Steam Logo" 
             className="h-8 object-contain"
           />
